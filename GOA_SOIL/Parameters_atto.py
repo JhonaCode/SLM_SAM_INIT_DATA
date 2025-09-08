@@ -27,7 +27,19 @@ from    cftime import num2date, num2pydate
 
 from datetime import datetime,timedelta
 
-path  ='/pesq/dados/bamc/jhonatan.aguirre/DATA/GOA_SOIL/atto_data_soil_2014'
+egeon=''
+
+#path =egeon+"/dados/bamc/jhonatan.aguirre/git_repositories/PAPER3_SHCA"
+path2 =egeon+"/dados/bamc/jhonatan.aguirre/git_repositories/PAPER3_SHCA"
+
+# Out figure folder
+#out_fig=path+'/document/fig'
+out_fig=path2+'/document_slm/figs'
+
+
+#path  ='/pesq/dados/bamc/jhonatan.aguirre/DATA/SLM_SAM_INIT_DATA/GOA_SOIL/atto_data_soil_2014'
+path  ='/dados/bamc/jhonatan.aguirre/DATA/SLM_SAM_INIT_DATA/GOA_SOIL/atto_data_soil_2014'
+
 
 # Open the CSV file in read mode ('r')
 #with open('%s/169_7_data.csv'%path, 'r', newline='') as csvfile:
@@ -48,8 +60,8 @@ format_string = "%d.%m.%y"
 
 #[%]
 soil_text = {
-    "soil_atto_plateaus"  : {"clay": 85.3, "sand":10.4 , "silt":4.5},
-    "soil_atto_terrances" : {"clay": 74.3, "sand":19.3 , "silt":6.6},
+    "soil_plateaus"  : {"clay": 85.3, "sand":10.4 , "silt":4.5},
+    "soil_terrances" : {"clay": 74.3, "sand":19.3 , "silt":6.6},
     }
 
 
