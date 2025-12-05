@@ -28,7 +28,6 @@ from    cftime import num2date, num2pydate
 from datetime import datetime,timedelta
 
 egeon=''
-egeon='/pesq'
 
 #path =egeon+"/dados/bamc/jhonatan.aguirre/git_repositories/PAPER3_SHCA"
 path2 =egeon+"/dados/bamc/jhonatan.aguirre/git_repositories/PAPER3_SHCA"
@@ -38,8 +37,7 @@ path2 =egeon+"/dados/bamc/jhonatan.aguirre/git_repositories/PAPER3_SHCA"
 out_fig=path2+'/document_slm/figs'
 
 
-path  ='/pesq/dados/bamc/jhonatan.aguirre/DATA/SLM_SAM_INIT_DATA/GOA_SOIL/atto_data_soil_2014'
-#path  ='/dados/bamc/jhonatan.aguirre/DATA/SLM_SAM_INIT_DATA/GOA_SOIL/atto_data_soil_2014'
+path  ='/pesq/dados/bamc/jhonatan.aguirre/DATA/SLM_SAM_INIT_DATA/GOA_SOIL/COVARIANCE'
 
 
 # Open the CSV file in read mode ('r')
@@ -51,20 +49,14 @@ path  ='/pesq/dados/bamc/jhonatan.aguirre/DATA/SLM_SAM_INIT_DATA/GOA_SOIL/atto_d
 #       print(row)
 
 # Read the CSV file into a DataFrame
-df = pd.read_csv('%s/169_7_data.csv'%path)
+df = pd.read_csv('%s/328_3_data.csv'%path)
+
 
 #date_string = "25.12.24"
 format_string = "%d.%m.%y"
 
 
 #####https://acp.copernicus.org/articles/15/10723/2015/acp-15-10723-2015.pdf
-
-#[%]
-soil_text = {
-    "soil_plateaus"  : {"clay": 85.3, "sand":10.4 , "silt":4.5},
-    "soil_terrances" : {"clay": 74.3, "sand":19.3 , "silt":6.6},
-    }
-
 
 dates=[]
 
@@ -73,25 +65,14 @@ utc=timedelta(hours=4)
 #for time,seconds in zip(df.Timestamps[0:40],df.Time[0:40]):
 for time,hour in zip(df.Timestamps,df.Time):
 
-    #print(hour%100.0)
-    if hour%100.0>0:
-        #date_object = np.datetime64(datetime.strptime(time,format_string)) + np.timedelta64(hour,'h')
-        h=hour/100+0.2
-        date_object = datetime.strptime(time,format_string) + timedelta(hours=h)-utc
-    else:
-        h=hour/100.0
-        #print(h)
-        date_object = datetime.strptime(time,format_string) + timedelta(hours=h) -utc
-
-
-    #date_object = np.datetime64(datetime.strptime(time,format_string)) + np.timedelta64(30,'m')
-
-    #print(minutes)
+    h=hour
+    date_object = datetime.strptime(time,format_string) + timedelta(hours=h)-utc
 
     dates.append(date_object)
 
 
 df['date']=dates
+
 
 def data_to_reference_vector(data,month_0,day_0,year):
 

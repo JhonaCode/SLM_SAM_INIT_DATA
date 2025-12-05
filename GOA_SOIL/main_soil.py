@@ -29,10 +29,12 @@ for i in range(0,len(target_depths)-1):
 #https://doi.org/10.1016/j.geoderma.2020.114557
 Fc=0.38
 
+target_depths[0]=0.001
+
 #for j in range(0,len(thikness)):
 for j in range(0,len(target_depths)):
 
-    file1.write("%f\t%f\t%f\t%f\t%f\t%f\n"%(target_depths[j]/100.0,soil_T[soiltype][month][j]+273.15,soil_M[soiltype][month][j]/(100.0*Fc),soil_text[soiltype]["sand"]*100,soil_text[soiltype]["clay"]*100,0))
+    #file1.write("%f\t%f\t%f\t%f\t%f\t%f\n"%(target_depths[j]/100.0,soil_T[soiltype][month][j]+273.15,soil_M[soiltype][month][j]/(100.0*Fc),soil_text[soiltype]["sand"]*100,soil_text[soiltype]["clay"]*100,0))
     print("%f\t%f\t%f\t%f\t%f\t%f\n"%(target_depths[j]/100.0,soil_T[soiltype][month][j]+273.15,soil_M[soiltype][month][j]/(100.0*Fc),soil_text[soiltype]["sand"]*100,soil_text[soiltype]["clay"]*100,0))
 
 file1.close()

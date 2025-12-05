@@ -146,16 +146,17 @@ def parameters(name,figsize):
         #     	  'xtick.labelsize': 'small',
         #     	  'ytick.labelsize': 'small',
         #          'xtick.direction': 'out',   
-        tama=8
+        tama=10
         parame= {
              	  'figure.figsize':figsize,
             	  'font.family' : 'serif',
             	  'font.sans-serif'    : 'Helvetica',
-                  'font.size' : tama,
-            	  'font.weight' : '400',
+                  'font.size' : tama-1,
+            	  'font.weight' : '500',
             	  'lines.linewidth':1.0,
-             	  'legend.fontsize': tama-2,
-             	  'axes.labelsize' : tama,
+             	  'legend.fontsize': tama-1,
+                  'axes.titlesize':tama-1,
+             	  'axes.labelsize' : tama-1,
              	  'axes.labelweight': tama,
              	  'xtick.labelsize': tama,
              	  'ytick.labelsize': tama,

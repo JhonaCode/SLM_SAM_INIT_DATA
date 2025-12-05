@@ -12,16 +12,16 @@ import datetime as dt
 
 format_string = "%Y-%m-%dT%H:%M"
 
-start_date='2014-09-01T00:00'
-end_date  ='2014-10-10T00:00'
+start_date='2014-02-15T00:00'
+end_date  ='2014-03-25T00:00'
 dini=dt.datetime.strptime(start_date, format_string)
 dfin=dt.datetime.strptime(end_date  , format_string)
 
 #greater than the start date and smaller than the end date
 iop1 = (df.date > dini) & (df.date <= dfin)
 
-start_date='2014-02-15T00:00'
-end_date  ='2014-03-25T00:00'
+start_date='2014-09-01T00:00'
+end_date  ='2014-10-10T00:00'
 dini=dt.datetime.strptime(start_date, format_string)
 dfin=dt.datetime.strptime(end_date  , format_string)
 

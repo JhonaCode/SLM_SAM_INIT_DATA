@@ -22,7 +22,7 @@ import numpy as np
 # To save the time coordinate in specific format 
 from    cftime import num2date, num2pydate
 
-path  ='/pesq/dados/bamc/jhonatan.aguirre/DATA/GOA_SOIL'
+path  ='/pesq/dados/bamc/jhonatan.aguirre/DATA/SLM_SAM_INIT_DATA/GOA_SOIL'
 
 ##%%%%https://www.mdpi.com/2076-3298/12/4/98
 
@@ -189,11 +189,11 @@ for soiltype in soil_temp:
         soil_M_int[soiltype][month]= interp1d(mid_depths, soil_moist[soiltype][month], kind='linear', fill_value='extrapolate')
     
 
-soil0  =0
-soiltop=60
+soil0  =0.0
+soiltop=60.0
 nlayers=6
 # Generate 10 cm intervals (0-100 cm)
-target_depths = np.arange(soil0,soiltop,nlayers)#+1
+target_depths = np.arange(soil0,soiltop,nlayers, dtype=float)#+1
 
 #forest_temp=forest_temp_int(target_depths).round(1)
 for soiltype in soil_temp: 

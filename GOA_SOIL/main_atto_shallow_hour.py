@@ -26,12 +26,12 @@ end_hour  ='2025-01-01T%s'%(hf)
 soiltype="soil_plateaus" 
 #soiltype="soil_terrances" 
 
-label1='shca_%s_%sh'%(soiltype,hi)
-label2='iop1_%s_%sh'%(soiltype,hi)
-label3='iop2_%s_%sh'%(soiltype,hi)
+label1='shca_%s_%sh_tk_nearest'%(soiltype,hi)
+label2='iop1_%s_%sh_tk_nearest'%(soiltype,hi)
+label3='iop2_%s_%sh_tk_nearest'%(soiltype,hi)
 
-#path  ='/pesq/dados/bamc/jhonatan.aguirre/DATA/SLM_SAM_INIT_DATA/GOA_SOIL'
-path  ='/dados/bamc/jhonatan.aguirre/DATA/SLM_SAM_INIT_DATA/GOA_SOIL'
+path  ='/pesq/dados/bamc/jhonatan.aguirre/DATA/SLM_SAM_INIT_DATA/GOA_SOIL'
+#path  ='/dados/bamc/jhonatan.aguirre/DATA/SLM_SAM_INIT_DATA/GOA_SOIL'
 
 #####################################################
 #####################################################
@@ -81,13 +81,10 @@ mean_sh   = down.hour_set_group(shca_sh)
 mean_iop1 = down.hour_set_group(iop1)
 mean_iop2 = down.hour_set_group(iop2)
 
-
-
 dini=dt.datetime.strptime(start_hour, dy.date_format)
 dfin=dt.datetime.strptime(end_hour  , dy.date_format)
 
-
-diurnalshca = (mean_sh["date"] >= dini)   & (mean_sh["date"] <= dfin)
+diurnalshca = (  mean_sh["date"] >= dini) & (  mean_sh["date"] <= dfin)
 diurnaliop1 = (mean_iop1["date"] >= dini) & (mean_iop1["date"] <= dfin)
 diurnaliop2 = (mean_iop2["date"] >= dini) & (mean_iop2["date"] <= dfin)
 ##
@@ -127,13 +124,37 @@ depths2=[10,20,30,40,60,100]
 
 soil0  =0
 soiltop=70
-nlayers=10
+nlayers=7
 # Generate 10 cm intervals (0-100 cm)
-target_depths = np.arange(soil0,soiltop,nlayers)#+1
+#target_depths = np.linspace(soil0,soiltop,nlayers,endpoint=False, dtype=float)#+1
+target_depths = np.arange(soil0,soiltop,nlayers, dtype=float)
+print(target_depths)
+
+target_depths = [0,10,20,30,40,60,100,150,200,250] 
+
+#print(target_depths)
+
+#exit()
+
+#target_depths[0]=0.0
+#usol=np.insert(usol,0,1)
 
 
 soil_int_T_shca=interp1d(depths1,  temperature_shca, kind='linear', fill_value='extrapolate')
-soil_int_q_shca=interp1d(depths2,     moisture_shca, kind='linear', fill_value='extrapolate')
+
+
+
+soil_int_T_shca_1=interp1d(depths1,  temperature_shca, kind='nearest', fill_value='extrapolate')
+#soil_int_T_shca_1=interp1d(depths1,  temperature_shca, kind='cubic', fill_value='extrapolate')
+soil_T_shca_1=soil_int_T_shca_1(target_depths)
+
+# Transform y-data to log-scale
+#log_x_data = np.log(depths1)
+
+
+soil_int_q_shca  =interp1d(depths2,     moisture_shca, kind='linear' , fill_value='extrapolate')
+soil_int_q_shca_1=interp1d(depths2,     moisture_shca, kind='nearest', fill_value='extrapolate')
+
 
 soil_int_T_iop1=interp1d(depths1,  temperature_iop1, kind='linear', fill_value='extrapolate')
 soil_int_q_iop1=interp1d(depths2,     moisture_iop1, kind='linear', fill_value='extrapolate')
@@ -144,7 +165,9 @@ soil_int_q_iop2=interp1d(depths2,     moisture_iop2, kind='linear', fill_value='
 
 
 soil_T_shca=soil_int_T_shca(target_depths)
+
 soil_q_shca=soil_int_q_shca(target_depths)
+soil_q_shca_1=soil_int_q_shca_1(target_depths)
 
 soil_T_iop1=soil_int_T_iop1(target_depths)
 soil_q_iop1=soil_int_q_iop1(target_depths)
@@ -153,12 +176,37 @@ soil_T_iop2=soil_int_T_iop2(target_depths)
 soil_q_iop2=soil_int_q_iop2(target_depths)
 
 
-thikness=[]
+# Create a figure and an axes object
+fig, ax1 = plt.subplots()
+
+
+# Invert the y-axis
+ax1.invert_yaxis()
+
+ax2 = ax1.twiny()
+
+ax1.plot(soil_T_shca  ,target_depths,color='red', marker='x')
+ax1.plot(soil_T_shca_1,target_depths,color='red', marker='*')
+
+ax2.plot(soil_q_shca  ,target_depths,color='blue', marker='x')
+ax2.plot(soil_q_shca_1,target_depths,color='blue', marker='*')
+
+#plt.show()
+#exit()
+
+
+thickness=[]
 
 for i in range(0,len(target_depths)-1):
 
     #print(target_depths[i+1]-target_depths[i])
-    thikness.append(target_depths[i+1]-target_depths[i])
+    thickness.append(target_depths[i+1]-target_depths[i])
+
+#print(target_depths)
+#print(thickness)
+#print('x')
+#exit()
+
 
 #######################################################
 #######################################################
@@ -185,6 +233,7 @@ print("Thickness[m]\tSoilt[K]\tWetness[kg/kg]\tSAND[%]\tCLAY[%]\tRelax Function\
 
 Fc=0.38
 
+"""
 #for i in range(0,len(thikness)):
 for i in range(0,len(target_depths)):
 
@@ -192,6 +241,19 @@ for i in range(0,len(target_depths)):
     file2.write("%f\t%f\t%f\t%f\t%f\t%f\n"%(target_depths[i]/100.0,soil_T_iop1[i]+273.15,soil_q_iop1[i]/Fc,soil_text[soiltype]["sand"],soil_text[soiltype]["clay"],0.0))
     file3.write("%f\t%f\t%f\t%f\t%f\t%f\n"%(target_depths[i]/100.0,soil_T_iop2[i]+273.15,soil_q_iop2[i]/Fc,soil_text[soiltype]["sand"],soil_text[soiltype]["clay"],0.0))
     print("%f\t%f\t%f\t%f\t%f\t%f\n"%(target_depths[i]/100.0,soil_T_shca[i]+273.15,soil_q_shca[i]/Fc,soil_text[soiltype]["sand"],soil_text[soiltype]["clay"],0.0))
+"""
+
+#print(thickness)
+
+
+for i in range(0,len(thickness)):
+
+
+    file1.write("%f\t%f\t%f\t%f\t%f\t%f\n"%(thickness[i]/100.0,soil_T_shca[i]+273.15,soil_q_shca[i]/Fc,soil_text[soiltype]["sand"],soil_text[soiltype]["clay"],0.0))
+    file2.write("%f\t%f\t%f\t%f\t%f\t%f\n"%(thickness[i]/100.0,soil_T_iop1[i]+273.15,soil_q_iop1[i]/Fc,soil_text[soiltype]["sand"],soil_text[soiltype]["clay"],0.0))
+    file3.write("%f\t%f\t%f\t%f\t%f\t%f\n"%(thickness[i]/100.0,soil_T_iop2[i]+273.15,soil_q_iop2[i]/Fc,soil_text[soiltype]["sand"],soil_text[soiltype]["clay"],0.0))
+    print("%f\t%f\t%f\t%f\t%f\t%f\n"%(thickness[i]/100.0,soil_T_shca[i]+273.15,soil_q_shca[i]/Fc,soil_text[soiltype]["sand"],soil_text[soiltype]["clay"],0.0))
+
 
 
 file1.close()
