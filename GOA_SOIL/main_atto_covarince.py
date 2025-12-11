@@ -36,7 +36,8 @@ from matplotlib.lines import Line2D
 import matplotlib.patches as mpatches
 
 
-out_fig='/pesq/dados/bamc/jhonatan.aguirre/git_repositories/PAPER3_SHCA/document_slm_git/figs'
+#out_fig='/pesq/dados/bamc/jhonatan.aguirre/git_repositories/PAPER3_SHCA/document_slm_git/figs'
+out_fig='/pesq/dados/bamc/jhonatan.aguirre/git_repositories/PAPER3_SHCA/comparison_paper/fig'
 
 
 mask = pd.Series(False, index=df.index)
@@ -110,6 +111,7 @@ cmas    = 0
 
 tama= pp.plotsize(size_wg,size_hf, cmas,'temporal')
 
+"""
 
 # Make a boxplot
 #fig, ax = plt.subplots(figsize=(15, 6))
@@ -230,7 +232,95 @@ ax.legend(handles=proxies, loc='best',frameon=False, fontsize=8)
 fig_label='surface_fluxes_atto_shca'
 
 fig.savefig('%s/%s.pdf'%(out_fig,fig_label),bbox_inches='tight',dpi=200, format='pdf')
+"""
+
+fig, ax = plt.subplots()
+plt.rcParams['lines.linewidth'] = 1.0
+
+time_sam=sam.shca_cass.time.dt.hour+sam.shca_cass.time.dt.minute/60.0
+time_sam2 =sam.shca_plat_nearest_modi.time.dt.hour+sam.shca_plat_nearest_modi.time.dt.minute/60.0
+time_cass=sam.cass.time.dt.hour+sam.cass.time.dt.minute/60.0
+time_sam3=sam.shca_2shf.time.dt.hour+sam.shca_2shf.time.dt.minute/60.0
+
+
+sns.pointplot(data=date_ok_se, x="time_str" ,y="H" ,errorbar='se',color='red' , join=True , linestyles=["-" ])#, markers=["o"], linestyles=["-." ])
+plt.plot(time_sam  ,sam.shca_cass.SHF ,color='green',linewidth=2)
+plt.plot(time_sam2 ,sam.shca_plat_nearest_modi.SHF ,color='blue' ,label='SHF',ls=':',linewidth=2)
+plt.plot(time_cass ,sam.cass.SHF ,color='indigo',ls='--',linewidth=2)
+plt.plot(time_sam3 ,sam.shca_2shf.SHF,color='orange',ls='-',linewidth=2)
+
+#plt.title('SHCA')
+ax.set_xlabel('Hours LT')
+ax.set_ylabel(r'Surface Heat Flux [Wm$^{2}$]')
+
+ax.xaxis.set_major_locator(plt.MultipleLocator(2.0))
+ax.set_xlim([6,19])
+ax.set_ylim([0,240])
+
+plt.grid(True, axis="x", linestyle="--", alpha=0.6)
+plt.grid(True, axis="y", linestyle="--", alpha=0.6)
+
+#Define custom colors and labels for the legend
+colors      = ['green','red','blue','indigo','orange','red' ]
+linestyle   = ['-','-',':','--','-',':' ]
+labels      = [r'SHCA',r'ATTO','SLM','CASS',r'SHCA$\times$2']
+
+proxies = [
+    Line2D([0], [0], color=colors[i], linestyle=linestyle[i], label=labels[i])
+    for i in range(len(labels))
+]
+
+# Then call legend(proxies)
+ax.legend(handles=proxies, loc='best',frameon=False, fontsize=8)
+
+fig_label='sensible_surface_flux_atto_shca'
+
+fig.savefig('%s/%s.pdf'%(out_fig,fig_label),bbox_inches='tight',dpi=200, format='pdf')
+
+##################################################
+##################################################
+fig, ax = plt.subplots()
+plt.rcParams['lines.linewidth'] = 1.0
+
+time_sam=sam.shca_cass.time.dt.hour+sam.shca_cass.time.dt.minute/60.0
+time_sam2 =sam.shca_plat_nearest_modi.time.dt.hour+sam.shca_plat_nearest_modi.time.dt.minute/60.0
+time_cass=sam.cass.time.dt.hour+sam.cass.time.dt.minute/60.0
+
+sns.pointplot(data=date_ok_se, x="time_str" ,y="LE",errorbar='se',color='red', join=True , linestyles=["-" ]) #markers=[""],
+plt.plot(time_sam,sam.shca_cass.LHF ,color='green',linewidth=2)
+plt.plot(time_sam2,sam.shca_plat_nearest_modi.LHF ,color='blue' ,label='SHF',ls=':',linewidth=2)
+plt.plot(time_cass,sam.cass.LHF ,color='indigo' ,label='LHF',ls='--',linewidth=2)
+
+#plt.title('SHCA')
+ax.set_xlabel('Hours')
+ax.set_ylabel(r'Latent Heat Flux [Wm$^{2}$]')
+
+ax.xaxis.set_major_locator(plt.MultipleLocator(2.0))
+ax.set_xlim([6,19])
+ax.set_ylim([0,500])
+
+plt.grid(True, axis="x", linestyle="--", alpha=0.6)
+plt.grid(True, axis="y", linestyle="--", alpha=0.6)
+
+#Define custom colors and labels for the legend
+colors      = ['green','red','blue','indigo','red','red' ]
+linestyle   = ['-','-',':','--','-',':' ]
+labels      = [r'SHCA',r'ATTO','SLM','CASS']
+
+proxies = [
+    Line2D([0], [0], color=colors[i], linestyle=linestyle[i], label=labels[i])
+    for i in range(len(labels))
+]
+
+# Then call legend(proxies)
+ax.legend(handles=proxies, loc='best',frameon=False, fontsize=8)
+
+fig_label='latent_surface_flux_atto_shca'
+
+fig.savefig('%s/%s.pdf'%(out_fig,fig_label),bbox_inches='tight',dpi=200, format='pdf')
+
 
 
 plt.show()
+
 

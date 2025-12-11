@@ -27,7 +27,7 @@ from    cftime import num2date, num2pydate
 
 from datetime import datetime,timedelta
 
-egeon=''
+egeon='/pesq'
 
 #path =egeon+"/dados/bamc/jhonatan.aguirre/git_repositories/PAPER3_SHCA"
 path2 =egeon+"/dados/bamc/jhonatan.aguirre/git_repositories/PAPER3_SHCA"
@@ -37,7 +37,7 @@ path2 =egeon+"/dados/bamc/jhonatan.aguirre/git_repositories/PAPER3_SHCA"
 out_fig=path2+'/document_slm/figs'
 
 
-path  ='/pesq/dados/bamc/jhonatan.aguirre/DATA/SLM_SAM_INIT_DATA/GOA_SOIL/COVARIANCE'
+path  =egeon+'/dados/bamc/jhonatan.aguirre/DATA/SLM_SAM_INIT_DATA/GOA_SOIL/COVARIANCE'
 
 
 # Open the CSV file in read mode ('r')
